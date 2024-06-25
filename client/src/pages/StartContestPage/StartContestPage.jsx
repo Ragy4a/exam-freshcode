@@ -11,7 +11,7 @@ import Header from '../../components/Header/Header';
 
 const StartContestPage = props => {
   if (props.userStore.data.role !== CONSTANTS.CUSTOMER) {
-    props.history.replace('/');
+    props.navigate('/', { replace: true });
   }
 
   const setBundle = bundleStr => {
@@ -22,7 +22,7 @@ const StartContestPage = props => {
       bundleList[array[i]] = i === array.length - 1 ? 'payment' : array[i + 1];
     }
     props.choseBundle(bundleList);
-    props.history.push(`/startContest/${bundleList.first}Contest`);
+    props.navigate(`/startContest/${bundleList.first}Contest`);
   };
 
   return (

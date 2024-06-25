@@ -21,7 +21,7 @@ const RegistrationPage = props => {
             </Link>
           </div>
         </div>
-        <RegistrationForm history={props.history} />
+        <RegistrationForm navigate={props.navigate} />
       </div>
       <div className={styles.footer}>
         <div className={styles.articlesMainContainer}>

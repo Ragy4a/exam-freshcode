@@ -1,29 +1,30 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { getUser } from '../../store/slices/userSlice';
 import Spinner from '../Spinner/Spinner';
 
-const OnlyNotAuthorizedUserHoc = Component => {
-  class HocForLoginSignUp extends React.Component {
-    componentDidMount () {
-      this.props.checkAuth(this.props.history.replace);
-    }
+const OnlyNotAuthorizedUserHoc = (Component) => {
+  function HocForLoginSignUp(props) {
+    const navigate = useNavigate();
 
-    render () {
-      if (this.props.isFetching) {
-        return <Spinner />;
-      }
-      if (!this.props.data) {
-        return <Component history={this.props.history} />;
-      }
-      return null;
+    useEffect(() => {
+      props.checkAuth(navigate);
+    }, []);
+
+    if (props.isFetching) {
+      return <Spinner />;
     }
+    if (!props.data) {
+      return <Component navigate={navigate} />;
+    }
+    return null;
   }
 
-  const mapStateToProps = state => state.userStore;
+  const mapStateToProps = (state) => state.userStore;
 
-  const mapDispatchToProps = dispatch => ({
-    checkAuth: replace => dispatch(getUser(replace)),
+  const mapDispatchToProps = (dispatch) => ({
+    checkAuth: (navigate) => dispatch(getUser(navigate)),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(HocForLoginSignUp);

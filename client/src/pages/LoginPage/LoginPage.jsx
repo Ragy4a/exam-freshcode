@@ -19,7 +19,7 @@ const LoginPage = props => (
         </div>
       </div>
       <div className={styles.loginFormContainer}>
-        <LoginForm history={props.history} />
+        <LoginForm navigate={props.navigate} />
       </div>
     </div>
   </div>

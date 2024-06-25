@@ -6,14 +6,14 @@ import CreatorDashboard from '../../components/CreatorDashboard/CreatorDashboard
 import Header from '../../components/Header/Header';
 
 const Dashboard = props => {
-  const { role, history } = props;
+  const { role, navigate, params } = props;
   return (
     <div>
       <Header />
       {role === CONSTANTS.CUSTOMER ? (
-        <CustomerDashboard history={history} match={props.match} />
+        <CustomerDashboard navigate={navigate} params={params} />
       ) : (
-        <CreatorDashboard history={history} match={props.match} />
+        <CreatorDashboard navigate={navigate} params={params} />
       )}
     </div>
   );

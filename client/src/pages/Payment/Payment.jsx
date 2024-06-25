@@ -29,19 +29,19 @@ const Payment = (props) => {
       data: {
         formData: data,
       },
-      history: props.history,
+      navigate: props.navigate,
     });
   };
 
   const goBack = () => {
-    props.history.goBack();
+    props.navigate(-1);
   };
 
   const { contests } = props.contestCreationStore;
   const { error } = props.payment;
   const { clearPaymentStore } = props;
   if (isEmpty(contests)) {
-    props.history.replace('startContest');
+    props.navigate('/startContest', { replace: true });
   }
   return (
     <div>
@@ -86,7 +86,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  pay: ({ data, history }) => dispatch(pay({ data, history })),
+  pay: ({ data, navigate }) => dispatch(pay({ data, navigate })),
   clearPaymentStore: () => dispatch(clearPaymentStore()),
 });
 

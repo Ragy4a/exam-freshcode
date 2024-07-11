@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import isEmpty from 'lodash/isEmpty';
 import { pay, clearPaymentStore } from '../../store/slices/paymentSlice';
 import PayForm from '../../components/PayForm/PayForm';
@@ -8,6 +9,8 @@ import CONSTANTS from '../../constants';
 import Error from '../../components/Error/Error';
 
 const Payment = (props) => {
+  const navigate = useNavigate();
+
   const pay = (values) => {
     const { contests } = props.contestCreationStore;
     const contestArray = [];
@@ -29,19 +32,19 @@ const Payment = (props) => {
       data: {
         formData: data,
       },
-      navigate: props.navigate,
+      navigate,
     });
   };
 
   const goBack = () => {
-    props.navigate(-1);
+    navigate(-1);
   };
 
   const { contests } = props.contestCreationStore;
   const { error } = props.payment;
   const { clearPaymentStore } = props;
   if (isEmpty(contests)) {
-    props.navigate('/startContest', { replace: true });
+    navigate('/startContest', { replace: true });
   }
   return (
     <div>

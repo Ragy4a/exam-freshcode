@@ -55,6 +55,12 @@ class ContestForm extends React.Component {
     this.getPreference();
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.contestType !== this.props.contestType) {
+      this.getPreference();
+    }
+  }
+
   render() {
     const { isFetching, error } = this.props.dataForContest;
     if (error) {

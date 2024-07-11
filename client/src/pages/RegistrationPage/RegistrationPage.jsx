@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-const { useNavigate } = require('react-router-dom');
+import { useNavigate } from 'react-router-dom';
 import RegistrationForm from '../../components/RegistrationForm/RegistrationForm';
 import styles from './RegistrationPage.module.sass';
 import { clearAuthError } from '../../store/slices/authSlice';

@@ -1,9 +1,9 @@
 const Conversation = require('../database/models/mongoModels/conversation');
-const Message = require('../database/models/mongoModels/Message');
+const Message = require('../database/models//mongoModels/Message');
 const Catalog = require('../database/models/mongoModels/Catalog');
 const moment = require('moment');
 const db = require('../database/models');
-const userQueries = require('./queries/userQueries');
+const userService = require('../services/user.service');
 const controller = require('../socketInit');
 const _ = require('lodash');
 
@@ -97,7 +97,7 @@ module.exports.getChat = async (req, res, next) => {
       },
     ]);
 
-    const interlocutor = await userQueries.findUser(
+    const interlocutor = await userService.findUser(
       { id: req.body.interlocutorId });
     res.send({
       messages,

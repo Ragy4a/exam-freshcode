@@ -1,5 +1,5 @@
 const bd = require('../database/models');
-const CONSTANTS = require('../constants/constants');
+const CONSTANTS = require('../constants');
 
 module.exports.createWhereForAllContests = (
   typeIndex, contestId, industry, awardSort) => {

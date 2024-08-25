@@ -6,16 +6,17 @@ module.exports = {
     password: process.env.POSTGRES_PASSWORD,
     database: process.env.POSTGRES_DB,
     host: process.env.POSTGRES_HOST,
-    dialect: 'postgres',
+    dialect: process.env.POSTGRES_USER,
     operatorsAliases: 'Op',
-    seederStorage: 'sequelize'
+    migrationStorage: 'json',
+    seederStorage: 'json',
   },
   test: {
     username: process.env.POSTGRES_USER,
     password: process.env.POSTGRES_PASSWORD,
     database: 'squad-help-test',
     host: 'localhost',
-    dialect: 'postgres',
+    dialect: process.env.POSTGRES_USER,
     operatorsAliases: 'Op',
     seederStorage: 'sequelize'
   },
@@ -24,7 +25,7 @@ module.exports = {
     password: process.env.POSTGRES_PASSWORD,
     database: 'squad-help-prod',
     host: 'localhost',
-    dialect: 'postgres',
+    dialect: process.env.POSTGRES_USER,
     operatorsAliases: 'Op',
     seederStorage: 'sequelize'
   }

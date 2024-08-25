@@ -1,7 +1,6 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames';
-import Header from '../../components/Header/Header';
 import styles from './UserProfile.module.sass';
 import CONSTANTS from '../../constants';
 import UserInfo from '../../components/UserInfo/UserInfo';
@@ -10,25 +9,22 @@ import { cashOut, clearPaymentStore } from '../../store/slices/paymentSlice';
 import { changeProfileViewMode } from '../../store/slices/userProfileSlice';
 import Error from '../../components/Error/Error';
 
-const UserProfile = (props) => {
+const UserProfile = () => {
+  const dispatch = useDispatch();
+
+  const { balance, role } = useSelector((state) => state.userStore.data);
+  const profileViewMode = useSelector((state) => state.userProfile.profileViewMode);
+  const error = useSelector((state) => state.payment.error);
+
   const pay = (values) => {
     const { number, expiry, cvc, sum } = values;
-    props.cashOut({
-      number,
-      expiry,
-      cvc,
-      sum,
-    });
+    dispatch(cashOut({ number, expiry, cvc, sum }));
   };
 
-  const {
-    balance,
-    role,
-    profileViewMode,
-    changeProfileViewMode,
-    error,
-    clearPaymentStore,
-  } = props;
+  const handleViewModeChange = (mode) => {
+    dispatch(changeProfileViewMode(mode));
+  };
+
   return (
     <div>
       <div className={styles.mainContainer}>
@@ -37,20 +33,18 @@ const UserProfile = (props) => {
           <div className={styles.optionsContainer}>
             <div
               className={classNames(styles.optionContainer, {
-                [styles.currentOption]:
-                  profileViewMode === CONSTANTS.USER_INFO_MODE,
+                [styles.currentOption]: profileViewMode === CONSTANTS.USER_INFO_MODE,
               })}
-              onClick={() => changeProfileViewMode(CONSTANTS.USER_INFO_MODE)}
+              onClick={() => handleViewModeChange(CONSTANTS.USER_INFO_MODE)}
             >
               UserInfo
             </div>
             {role === CONSTANTS.CREATOR && (
               <div
                 className={classNames(styles.optionContainer, {
-                  [styles.currentOption]:
-                    profileViewMode === CONSTANTS.CASHOUT_MODE,
+                  [styles.currentOption]: profileViewMode === CONSTANTS.CASHOUT_MODE,
                 })}
-                onClick={() => changeProfileViewMode(CONSTANTS.CASHOUT_MODE)}
+                onClick={() => handleViewModeChange(CONSTANTS.CASHOUT_MODE)}
               >
                 Cashout
               </div>
@@ -71,7 +65,7 @@ const UserProfile = (props) => {
                   <Error
                     data={error.data}
                     status={error.status}
-                    clearError={clearPaymentStore}
+                    clearError={() => dispatch(clearPaymentStore())}
                   />
                 )}
                 <PayForm sendRequest={pay} />
@@ -84,22 +78,4 @@ const UserProfile = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  const { balance, role } = state.userStore.data;
-  const { profileViewMode } = state.userProfile;
-  const { error } = state.payment;
-  return {
-    balance,
-    role,
-    profileViewMode,
-    error,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => ({
-  cashOut: (data) => dispatch(cashOut(data)),
-  changeProfileViewMode: (data) => dispatch(changeProfileViewMode(data)),
-  clearPaymentStore: () => dispatch(clearPaymentStore()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(UserProfile);
+export default UserProfile;

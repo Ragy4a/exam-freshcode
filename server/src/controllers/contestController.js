@@ -1,4 +1,4 @@
-const db = require('../models');
+const db = require('../database/models');
 const ServerError =require('../errors/ServerError');
 const contestQueries = require('./queries/contestQueries');
 const userQueries = require('./queries/userQueries');

@@ -3,10 +3,10 @@ const http = require('http');
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-require('./dbMongo/mongoose');
+require('../src/database/dbMongo/mongoose');
 const router = require('./router');
 const controller = require('./socketInit');
-const handlerError = require('./handlerError/handler');
+const handlerError = require('./middlewares/errorHandler');
 
 const PORT = process.env.PORT || 3000;
 const app = express();

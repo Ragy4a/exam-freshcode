@@ -4,25 +4,19 @@ FROM node:$VERSION
 
 ARG NODE_ENV="development"
 
-RUN mkdir /server \
-    && mkdir -p /public/images
-
-RUN mkdir -p /var/www/html/images 
+RUN mkdir -p /server /public/images /var/www/html/images \
+    && chown -R node:node /server /public/images /var/www/html/images
 
 WORKDIR /server
 
 COPY package*.json ./
 
-# RUN npm install -g nodemon
-# RUN npm install -g sequelize-cli
-
-RUN npm install
-
-RUN chown -R node:node /server/node_modules
+RUN npm install --only=production
 
 COPY . .
 
+RUN chown -R node:node /server/node_modules
+
 EXPOSE 3000
 
-# CMD sequelize db:migrate && sequelize db:seed:all && npm start
-CMD npm start
+CMD ["npm", "start"]

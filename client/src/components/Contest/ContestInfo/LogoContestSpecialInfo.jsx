@@ -1,22 +1,13 @@
 import React from 'react';
-import styles from './ContestInfo.module.sass';
+import ContestSpecialInfo from './ContestSpecialInfo';
 
-const LogoContestSpecialInfo = props => {
-  const { nameVenture, brandStyle } = props;
-  return (
-    <>
-      {nameVenture && (
-        <div className={styles.dataContainer}>
-          <span className={styles.label}>Name ventrure</span>
-          <span className={styles.data}>{nameVenture}</span>
-        </div>
-      )}
-      <div className={styles.dataContainer}>
-        <span className={styles.label}>Brand Style</span>
-        <span className={styles.data}>{brandStyle}</span>
-      </div>
-    </>
-  );
+const LogoContestSpecialInfo = ({ nameVenture, brandStyle }) => {
+  const fields = [
+    { label: 'Name Venture', value: nameVenture },
+    { label: 'Brand Style', value: brandStyle },
+  ];
+
+  return <ContestSpecialInfo fields={fields} />;
 };
 
 export default LogoContestSpecialInfo;

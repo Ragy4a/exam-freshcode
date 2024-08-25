@@ -3,7 +3,7 @@ const userController = require('../controllers/userController');
 const validators = require('../middlewares/validators');
 const hashPass = require('../middlewares/hashPassMiddle');
 const checkToken = require('../middlewares/checkToken');
-const upload = require('../utils/fileUpload');
+const { uploadAvatar } = require('../utils/fileUpload');
 const basicMiddlewares = require('../middlewares/basicMiddlewares');
 
 const router = new Router();
@@ -21,7 +21,7 @@ router.post(
   userController.login,
 );
 
-router.post(
+router.get(
   '/getUser',
   checkToken.checkAuth,
 );
@@ -29,7 +29,7 @@ router.post(
 router.post(
   '/updateUser',
   checkToken.checkToken,
-  upload.uploadAvatar,
+  uploadAvatar.single('avatar'),
   userController.updateUser,
 );
 

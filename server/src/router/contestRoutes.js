@@ -3,7 +3,7 @@ const contestController = require('../controllers/contestController');
 const { payment } = require('../controllers/userController');
 const checkToken = require('../middlewares/checkToken');
 const basicMiddlewares = require('../middlewares/basicMiddlewares');
-const upload = require('../utils/fileUpload');
+const { uploadContestFiles, updateContestFile, uploadLogoFiles } = require('../utils/fileUpload');
 const validators = require('../middlewares/validators');
 
 const router = new Router();
@@ -18,7 +18,7 @@ router.post(
   '/pay',
   checkToken.checkToken,
   basicMiddlewares.onlyForCustomer,
-  upload.uploadContestFiles,
+  uploadContestFiles.array('fileName', 3),
   basicMiddlewares.parseBody,
   validators.validateContestCreation,
   payment,
@@ -47,7 +47,7 @@ router.post(
 router.post(
   '/updateContest',
   checkToken.checkToken,
-  upload.updateContestFile,
+  updateContestFile.single('fileName'),
   contestController.updateContest,
 );
 
@@ -60,7 +60,7 @@ router.get(
 router.post(
   '/setNewOffer',
   checkToken.checkToken,
-  upload.uploadLogoFiles,
+  uploadLogoFiles.array('fileName', 3),
   basicMiddlewares.canSendOffer,
   contestController.setNewOffer,
 );

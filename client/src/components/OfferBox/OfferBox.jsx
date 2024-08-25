@@ -1,10 +1,10 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Rating from 'react-rating';
 import isEqual from 'lodash/isEqual';
 import classNames from 'classnames';
 import { confirmAlert } from 'react-confirm-alert';
-import withRouter from '../../hocs/withRouter';
+import { useNavigate } from 'react-router-dom';
 import { goToExpandedDialog } from '../../store/slices/chatSlice';
 import {
   changeMark,
@@ -16,10 +16,15 @@ import styles from './OfferBox.module.sass';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import './confirmStyle.css';
 
-const OfferBox = (props) => {
+const OfferBox = ({ data, contestType, needButtons, setOfferStatus }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { id, role } = useSelector((state) => state.userStore.data);
+  const { messagesPreview } = useSelector((state) => state.chatStore);
+
   const findConversationInfo = () => {
-    const { messagesPreview, id } = props;
-    const participants = [id, props.data.User.id];
+    const participants = [id, data.User.id];
     participants.sort(
       (participant1, participant2) => participant1 - participant2
     );
@@ -38,13 +43,12 @@ const OfferBox = (props) => {
 
   const resolveOffer = () => {
     confirmAlert({
-      title: 'confirm',
-      message: 'Are u sure?',
+      title: 'Confirm',
+      message: 'Are you sure?',
       buttons: [
         {
           label: 'Yes',
-          onClick: () =>
-            props.setOfferStatus(props.data.User.id, props.data.id, 'resolve'),
+          onClick: () => setOfferStatus(data.User.id, data.id, 'resolve'),
         },
         {
           label: 'No',
@@ -55,13 +59,12 @@ const OfferBox = (props) => {
 
   const rejectOffer = () => {
     confirmAlert({
-      title: 'confirm',
-      message: 'Are u sure?',
+      title: 'Confirm',
+      message: 'Are you sure?',
       buttons: [
         {
           label: 'Yes',
-          onClick: () =>
-            props.setOfferStatus(props.data.User.id, props.data.id, 'reject'),
+          onClick: () => setOfferStatus(data.User.id, data.id, 'reject'),
         },
         {
           label: 'No',
@@ -70,18 +73,20 @@ const OfferBox = (props) => {
     });
   };
 
-  const changeMark = (value) => {
-    props.clearError();
-    props.changeMark({
-      mark: value,
-      offerId: props.data.id,
-      isFirst: !props.data.mark,
-      creatorId: props.data.User.id,
-    });
+  const changeMarkHandler = (value) => {
+    dispatch(clearChangeMarkError());
+    dispatch(
+      changeMark({
+        mark: value,
+        offerId: data.id,
+        isFirst: !data.mark,
+        creatorId: data.User.id,
+      })
+    );
   };
 
   const offerStatus = () => {
-    const { status } = props.data;
+    const { status } = data;
     if (status === CONSTANTS.OFFER_STATUS_REJECTED) {
       return (
         <i
@@ -100,14 +105,17 @@ const OfferBox = (props) => {
   };
 
   const goChat = () => {
-    props.goToExpandedDialog({
-      interlocutor: props.data.User,
-      conversationData: findConversationInfo(),
-    });
+    dispatch(
+      goToExpandedDialog({
+        interlocutor: data.User,
+        conversationData: findConversationInfo(),
+      })
+    );
+    navigate('/chat');
   };
 
-  const { data, role, id, contestType } = props;
-  const { avatar, firstName, lastName, email, rating } = props.data.User;
+  const { avatar, firstName, lastName, email, rating } = data.User;
+
   return (
     <div className={styles.offerContainer}>
       {offerStatus()}
@@ -158,10 +166,12 @@ const OfferBox = (props) => {
           {contestType === CONSTANTS.LOGO_CONTEST ? (
             <img
               onClick={() =>
-                props.changeShowImage({
-                  imagePath: data.fileName,
-                  isShowOnFull: true,
-                })
+                dispatch(
+                  changeShowImage({
+                    imagePath: data.fileName,
+                    isShowOnFull: true,
+                  })
+                )
               }
               className={styles.responseLogo}
               src={`${CONSTANTS.publicURL}${data.fileName}`}
@@ -188,10 +198,10 @@ const OfferBox = (props) => {
               emptySymbol={
                 <img
                   src={`${CONSTANTS.STATIC_IMAGES_PATH}star-outline.png`}
-                  alt="star"
+                  alt="star-outline"
                 />
               }
-              onClick={changeMark}
+              onClick={changeMarkHandler}
               placeholderRating={data.mark}
             />
           )}
@@ -200,7 +210,7 @@ const OfferBox = (props) => {
           <i onClick={goChat} className="fas fa-comments" />
         )}
       </div>
-      {props.needButtons(data.status) && (
+      {needButtons(data.status) && (
         <div className={styles.btnsContainer}>
           <div onClick={resolveOffer} className={styles.resolveBtn}>
             Resolve
@@ -214,25 +224,4 @@ const OfferBox = (props) => {
   );
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  changeMark: (data) => dispatch(changeMark(data)),
-  clearError: () => dispatch(clearChangeMarkError()),
-  goToExpandedDialog: (data) => dispatch(goToExpandedDialog(data)),
-  changeShowImage: (data) => dispatch(changeShowImage(data)),
-});
-
-const mapStateToProps = (state) => {
-  const { changeMarkError } = state.contestByIdStore;
-  const { id, role } = state.userStore.data;
-  const { messagesPreview } = state.chatStore;
-  return {
-    changeMarkError,
-    id,
-    role,
-    messagesPreview,
-  };
-};
-
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(OfferBox)
-);
+export default OfferBox;

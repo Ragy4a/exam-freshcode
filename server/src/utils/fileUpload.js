@@ -1,13 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
-const ServerError = require('../errors/ServerError');
+const { avatars, contests, offers } = require('../config/staticConfig');
 const env = process.env.NODE_ENV || 'development';
-const devFilePath = path.resolve(__dirname, '..', '..', '..', 'public/images');
+const prodFilePath = path.resolve('..', 'var', 'www', 'html', 'images');
+const devFilePath = path.resolve('..', 'public', 'images');
 
-const filePath = env === 'production'
-  ? '/var/www/html/images/'
-  : devFilePath;
+const filePath = env === 'production' ? prodFilePath : devFilePath;
 
 if (!fs.existsSync(filePath)) {
   fs.mkdirSync(filePath, {
@@ -15,64 +14,43 @@ if (!fs.existsSync(filePath)) {
   });
 }
 
-const storageContestFiles = multer.diskStorage({
-  destination (req, file, cb) {
-    cb(null, filePath);
-  },
-  filename (req, file, cb) {
-    cb(null, Date.now() + file.originalname);
-  },
+function createStorage(destinationPath) {
+  return multer.diskStorage({
+    destination(req, file, cb) {
+      cb(null, destinationPath);
+    },
+    filename(req, file, cb) {
+      cb(null, Date.now() + file.originalname);
+    },
+  });
+}
+
+const storageAvatarsFiles = createStorage(avatars);
+const storageContestFiles = createStorage(contests);
+const storageLogoFiles = createStorage(offers);
+
+const filterImage = (req, file, cb) => {
+  const mimeTypeRegex = /^image\/(png|jpeg|gif)$/;
+  if(mimeTypeRegex.test(file.mimetype)) {
+      cb(null, true);
+  } else {
+      cb(new Error('Invalid file type. Only PNG, JPEG, and GIF are allowed.'), false);
+  }
+}
+
+module.exports.uploadAvatar = multer({
+  storage: storageAvatarsFiles,
+  fileFilter: filterImage,
 });
-
-const uploadAvatars = multer({ storage: storageContestFiles }).single('file');
-const uploadContestFiles = multer({ storage: storageContestFiles }).array(
-  'files', 3);
-const updateContestFile = multer({ storage: storageContestFiles }).single(
-  'file');
-const uploadLogoFiles = multer({ storage: storageContestFiles }).single(
-  'offerData');
-
-module.exports.uploadAvatar = (req, res, next) => {
-  uploadAvatars(req, res, (err) => {
-    if (err instanceof multer.MulterError) {
-      next(new ServerError());
-    } else if (err) {
-      next(new ServerError());
-    }
-    return next();
-  });
-};
-
-module.exports.uploadContestFiles = (req, res, next) => {
-  uploadContestFiles(req, res, (err) => {
-    if (err instanceof multer.MulterError) {
-      next(new ServerError());
-    } else if (err) {
-      next(new ServerError());
-    }
-    return next();
-  });
-};
-
-module.exports.updateContestFile = (req, res, next) => {
-  updateContestFile(req, res, (err) => {
-    if (err instanceof multer.MulterError) {
-      next(new ServerError());
-    } else if (err) {
-      next(new ServerError());
-    }
-    return next();
-  });
-};
-
-module.exports.uploadLogoFiles = (req, res, next) => {
-  uploadLogoFiles(req, res, (err) => {
-    if (err instanceof multer.MulterError) {
-      next(new ServerError());
-    } else if (err) {
-      next(new ServerError());
-    }
-    return next();
-  });
-};
-
+module.exports.uploadContestFiles = multer({
+  storage: storageContestFiles,
+  fileFilter: filterImage,
+})
+module.exports.updateContestFile = multer({
+  storage: storageContestFiles,
+  fileFilter: filterImage
+});
+module.exports.uploadLogoFiles = multer({
+  storage: storageLogoFiles,
+  fileFilter: filterImage
+});

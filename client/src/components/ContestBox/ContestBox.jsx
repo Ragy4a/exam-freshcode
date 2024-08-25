@@ -3,41 +3,46 @@ import moment from 'moment';
 import styles from './ContestBox.module.sass';
 import CONSTANTS from '../../constants';
 
-const ContestBox = props => {
+const ContestBox = ({ data, goToExtended }) => {
   const getTimeStr = () => {
-    const diff = moment.duration(moment().diff(moment(props.data.createdAt)));
+    const diff = moment.duration(moment().diff(moment(data.createdAt)));
+    const days = diff.days();
+    const hours = diff.hours();
     let str = '';
-    if (diff._data.days !== 0) str = `${diff._data.days}d `;
-    if (diff._data.hours !== 0) str += `${diff._data.hours}h`;
+    if (days !== 0) str = `${days}d `;
+    if (hours !== 0) str += `${hours}h`;
     if (str.length === 0) str = 'less than one hour';
     return str;
   };
 
   const getPreferenceContest = () => {
-    const { data } = props;
-    if (data.contestType === CONSTANTS.NAME_CONTEST) return data.typeOfName;
-    if (data.contestType === CONSTANTS.LOGO_CONTEST) return data.brandStyle;
-    return data.typeOfTagline;
+    switch (data.contestType) {
+      case CONSTANTS.NAME_CONTEST:
+        return data.typeOfName;
+      case CONSTANTS.LOGO_CONTEST:
+        return data.brandStyle;
+      case CONSTANTS.TAGLINE_CONTEST:
+        return data.typeOfTagline;
+      default:
+        return '';
+    }
   };
 
-  const ucFirstLetter = string =>
+  const ucFirstLetter = (string) =>
     string.charAt(0).toUpperCase() + string.slice(1);
 
-  const { id, title, contestType, prize, count, goToExtended } = props.data;
   return (
     <div
       className={styles.contestBoxContainer}
-      onClick={() => props.goToExtended(id)}
+      onClick={() => goToExtended(data.id)}
     >
       <div className={styles.mainContestInfo}>
         <div className={styles.titleAndIdContainer}>
-          <span className={styles.title}>{title}</span>
-          <span className={styles.id}>{`(#${id})`}</span>
+          <span className={styles.title}>{data.title}</span>
+          <span className={styles.id}>{`(#${data.id})`}</span>
         </div>
         <div className={styles.contestType}>
-          <span>{`${ucFirstLetter(
-            contestType
-          )} / ${getPreferenceContest()}`}</span>
+          <span>{`${ucFirstLetter(data.contestType)} / ${getPreferenceContest()}`}</span>
         </div>
         <div className={styles.contestType}>
           <span>
@@ -50,7 +55,7 @@ const ContestBox = props => {
             <div>
               <img
                 src={`${CONSTANTS.STATIC_IMAGES_PATH}smallCheck.png`}
-                alt='check'
+                alt="check"
               />
             </div>
             <span>Guaranteed prize</span>
@@ -58,9 +63,9 @@ const ContestBox = props => {
           <div className={styles.prize}>
             <img
               src={`${CONSTANTS.STATIC_IMAGES_PATH}diamond.png`}
-              alt='diamond'
+              alt="diamond"
             />
-            <span>{`$${prize}`}</span>
+            <span>{`$${data.prize}`}</span>
           </div>
         </div>
       </div>
@@ -69,9 +74,9 @@ const ContestBox = props => {
           <div className={styles.entriesCounter}>
             <img
               src={`${CONSTANTS.STATIC_IMAGES_PATH}entrieImage.png`}
-              alt='logo'
+              alt="entries"
             />
-            <span>{count}</span>
+            <span>{data.count}</span>
           </div>
           <span>Entries</span>
         </div>

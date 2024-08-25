@@ -8,7 +8,7 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
   config => {
-    const token = window.localStorage.getItem(CONTANTS.ACCESS_TOKEN);
+    const token = localStorage.getItem(CONTANTS.ACCESS_TOKEN);
     if (token) {
       config.headers = { ...config.headers, Authorization: token };
     }
@@ -20,7 +20,7 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   response => {
     if (response.data.token) {
-      window.localStorage.setItem(CONTANTS.ACCESS_TOKEN, response.data.token);
+      localStorage.setItem(CONTANTS.ACCESS_TOKEN, response.data.token);
     }
     return response;
   },

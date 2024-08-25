@@ -1,22 +1,13 @@
 import React from 'react';
-import styles from './ContestInfo.module.sass';
+import ContestSpecialInfo from './ContestSpecialInfo';
 
-const TaglineContestSpecialInfo = props => {
-  const { nameVenture, typeOfTagline } = props;
-  return (
-    <>
-      {nameVenture && (
-        <div className={styles.dataContainer}>
-          <span className={styles.label}>Name ventrure</span>
-          <span className={styles.data}>{nameVenture}</span>
-        </div>
-      )}
-      <div className={styles.dataContainer}>
-        <span className={styles.label}>Type of Taglinee</span>
-        <span className={styles.data}>{typeOfTagline}</span>
-      </div>
-    </>
-  );
+const TaglineContestSpecialInfo = ({ nameVenture, typeOfTagline }) => {
+  const fields = [
+    { label: 'Name Venture', value: nameVenture },
+    { label: 'Type of Tagline', value: typeOfTagline },
+  ];
+
+  return <ContestSpecialInfo fields={fields} />;
 };
 
 export default TaglineContestSpecialInfo;

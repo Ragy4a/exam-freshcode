@@ -8,7 +8,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use('/public', express.static('public'));
+app.use(express.static(path.resolve('..', process.env.STATIC_PATH)));
 app.use('/api', router);
 app.use(handlerError);
 

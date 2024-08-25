@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const CONSTANTS = require('../constants');
+const CONSTANTS = require('../constants/constants');
 const bd = require('../database/models');
 const NotUniqueEmail = require('../errors/NotUniqueEmail');
 const moment = require('moment');

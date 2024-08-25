@@ -1,22 +1,12 @@
-const http = require('http');
-// ============================
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-require('../src/database/dbMongo/mongoose');
-const router = require('./router');
+const { createServer } = require('http');
+const app = require('./app');
+require('./database/dbMongo/mongoose');
 const controller = require('./socketInit');
-const handlerError = require('./middlewares/errorHandler');
+require('dotenv').config();
+// ============================
 
 const PORT = process.env.PORT || 3000;
-const app = express();
 
-app.use(cors());
-app.use(express.json());
-app.use('/public', express.static('public'));
-app.use(router);
-app.use(handlerError);
-
-const server = http.createServer(app);
+const server = createServer(app);
 server.listen(PORT, () =>  console.log(`Example app listening on port ${PORT}!`));
 controller.createConnection(server);

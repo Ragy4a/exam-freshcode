@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import './App.css';
 import { ToastContainer } from 'react-toastify';
 import Router from './router';
 import LoginPage from './pages/LoginPage/LoginPage';
@@ -20,6 +19,8 @@ import ChatContainer from './components/Chat/ChatComponents/ChatContainer/ChatCo
 import Layout from './pages/Layout/Layout';
 import OnlyNotAuthorizedUserRoute from './components/Routes/OnlyNotAuthorizedUserRoute/OnlyNotAuthorizedUserRoute';
 import PrivateRoute from './components/Routes/PrivateRoute/PrivateRoute';
+import HowItWorks from './pages/HowItWorks/HowItWorks'
+import './App.css';
 
 class App extends Component {
   render() {
@@ -79,6 +80,7 @@ class App extends Component {
               <Route path="/contest/:id" element={<ContestPage />}/>
               <Route path="/account" element={<UserProfile />}/>
             </Route>
+            <Route path="/how-it-works" element={<HowItWorks />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>

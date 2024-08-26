@@ -1,5 +1,4 @@
 import React from 'react';
-import ContestSpecialInfo from './ContestSpecialInfo';
 
 const TaglineContestSpecialInfo = ({ nameVenture, typeOfTagline }) => {
   const fields = [

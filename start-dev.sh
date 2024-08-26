@@ -4,7 +4,6 @@
 ## Run application in DEV mode ##
 #################################
 
-project_name=$(basename "$PWD")
 container_name=$(docker compose --file docker-compose-dev.yaml ps --services | grep server)
 
 started_at=$(date +"%s")

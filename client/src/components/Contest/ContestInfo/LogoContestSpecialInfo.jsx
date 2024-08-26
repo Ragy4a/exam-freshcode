@@ -1,5 +1,4 @@
 import React from 'react';
-import ContestSpecialInfo from './ContestSpecialInfo';
 
 const LogoContestSpecialInfo = ({ nameVenture, brandStyle }) => {
   const fields = [
